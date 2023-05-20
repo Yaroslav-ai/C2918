@@ -134,9 +134,56 @@ class Human:
         if self.satiety < 0:
             print("Desd...")
             return False
-        if self.money <= 500:
+        if self.money < -500:
             print("Bankrupt...")
             return False
+
+    def live(self, day):
+        if self.is_alive() == False:
+            return False
+        if self.home is None:
+            print("Settled in the house")
+            self.get_home()
+        if self.car is None:
+            self.get_car()
+            print(f"I bought a car{self.car.brand}")
+        if self.job is None:
+            self.get_job()
+            print(f"I dont have a job,going to get a job{self.job} with salary {self.job.salary}")
+        self.days_indexes(day)
+        dice = random.randint(1,4)
+
+        if self.satiety <20:
+            print("I'll go eat")
+            self.eat()
+        elif self.gladness <20:
+            if self.home.mess >15:
+                print("I want to chill,but there is so much mess... \n So I will clean the house")
+                self.clean_home()
+            else:
+                print("Let's chill")
+                self.chill()
+        elif self.money <0:
+            print("Start working")
+            self.work()
+        elif self.car.strenght <15:
+            print("I need to repair my car")
+            self.to_repeir()
+        elif dice == 1:
+            print("Lets chill")
+            self.chill()
+        elif dice == 2:
+            print("Start working")
+            self.work()
+        elif dice == 3:
+            print("Cleaning time")
+            self.clean_home()
+        elif dice == 4:
+            print("Time to treats!")
+            self.shopping(manage='delicacies')
+
+
+
 
 
 
@@ -148,10 +195,48 @@ class Human:
 
 
 class Auto:
-    pass
+    def __init__(self, brand_list):
+        self.brand = random.choice(list(brand_list))
+        self.fuel = brand_list[self.brand]["fuel"]
+        self.strenght = brand_list[self.brand]["strenght"]
+        self.consumption = brand_list[self.brand]["consumption"]
+
+    def drive(self):
+        if self.strenght >0 and self.fuel >= self.consumption:
+            self.fuel -= self.consumption
+            self.strenght -= 1
+            return True
+        else:
+            print("The car cannot move")
+            return False
 
 class House:
-    pass
+    def __init__(self):
+        self.mess = 0
+        self.food = 0
+
+job_list = {
+    "Java developer": {"salary": 50, 'gladness_less': 10},
+    "Phyton developer": {"salary": 40, 'gladness_less': 3},
+    "C++ developer": {"salary": 45, 'gladness_less': 25},
+    "Rust developer": {"salary": 70, 'gladness_less': 1},
+}
+brands_of_car = {
+    "BMW": {"fuel": 100, "strenght": 100, "consumption": 6},
+    "Lada": {"fuel": 50, "strenght": 40, "consumption": 10},
+    "Volvo": {"fuel": 70, "strenght": 150, "consumption": 8},
+    "Ferari": {"fuel": 80, "strenght": 120, "consumption": 14},
+}
 
 class Job:
-    pass
+    def __init__(self, job_list):
+        self.job = random.choice(list(job_list))
+        self.salary = job_list[self.job]["salary"]
+        self.gladness_less = job_list[self.job]["gladness_less"]
+
+
+vasya = Human(name="Vasya")
+
+for day in range(1, 20):
+    if vasya.live(day) == False:
+        break
