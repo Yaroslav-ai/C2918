@@ -1,3 +1,4 @@
+print("Цей проект симулює життя доісторичної людини")
 import random
 class Human:
     def __init__(self, name="Human", case=None, cave=None, dinosaur=None):
